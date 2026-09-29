@@ -252,3 +252,136 @@ h1 { margin: 9px 0 6px; font: 800 27px 'Manrope', sans-serif; letter-spacing: -.
   background: #e74c3c;
   color: #fff;
 }
+
+
+/* === FinQuest full-screen layout overrides === */
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+#root {
+  max-width: none;
+  padding: 0;
+}
+
+.app-shell {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.main-content {
+  flex: 1 1 auto;
+  width: calc(100% - 248px);
+  min-width: 0;
+  max-width: none;
+}
+
+.page-content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 37px clamp(22px, 3vw, 52px) 25px;
+}
+
+/* Keep the dashboard full-width at all breakpoints. */
+@media (max-width: 1100px) {
+  .main-content {
+    width: calc(100% - 210px);
+  }
+
+  .page-content {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .main-content {
+    width: calc(100% - 65px);
+  }
+
+  .page-content {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 25px 14px;
+  }
+}
+
+
+/* === Consistent, slightly larger typography across FinQuest === */
+:root {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 17px;
+}
+
+html,
+body,
+#root,
+button,
+input,
+select,
+textarea {
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Use the dashboard's DM Sans font everywhere, including headings. */
+h1, h2, h3, h4, h5, h6,
+.brand,
+.stat-value,
+.budget-circle-inner strong {
+  font-family: 'DM Sans', sans-serif !important;
+}
+
+/* Scale common interface text up slightly while preserving visual hierarchy. */
+.nav-item { font-size: 14px; }
+.breadcrumb { font-size: 13px; }
+.today-label { font-size: 12px; }
+.workspace-label { font-size: 11px; }
+.welcome-section p { font-size: 13px; }
+.eyebrow { font-size: 10px; }
+.date-chip { font-size: 11px; }
+.stat-top { font-size: 12px; }
+.stat-value { font-size: clamp(21px, 2.1vw, 27px); }
+.stat-foot { font-size: 11px; }
+.panel-heading h2 { font-size: 15px; }
+.panel-heading p { font-size: 11px; }
+.text-button { font-size: 11px; }
+.muted-label { font-size: 11px; }
+.return-pill { font-size: 10px; }
+.chart-y-labels,
+.chart-labels,
+.chart-note { font-size: 10px; }
+.budget-legend div { font-size: 11px; }
+.budget-legend strong { font-size: 12px; }
+.budget-tip { font-size: 11px; }
+.transaction-name strong { font-size: 12px; }
+.transaction-name span { font-size: 10px; }
+.transaction-amount { font-size: 13px; }
+.cooloff-copy > span { font-size: 9px; }
+.cooloff-copy h3 { font-size: 15px; }
+.cooloff-copy p { font-size: 11px; }
+.cooloff-banner button,
+.primary-button { font-size: 11px; }
+.footer { font-size: 10px; }
+.coming-soon h2 { font-size: 19px; }
+.coming-soon p { font-size: 13px; }
+.profile strong { font-size: 13px; }
+.profile div:nth-child(2) span { font-size: 11px; }
+
+@media (max-width: 760px) {
+  .nav-item { font-size: 0; }
+  .stat-value { font-size: 19px; }
+}
+@media (max-width: 420px) {
+  .stat-value { font-size: 24px; }
+}

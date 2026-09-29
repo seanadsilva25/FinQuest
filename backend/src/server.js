@@ -6,6 +6,11 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const walletRoutes = require("./routes/walletRoutes");
+const stockRoutes = require("./routes/stockRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
+const portfolioRoutes = require("./routes/portfolioRoutes");
+const expenseRoutes = require("./routes/expenseRoutes");
+const coolOffRoutes = require("./routes/coolOffRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +32,17 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 //Wallet routes 
 app.use("/api/wallet", walletRoutes);
+//Stock routes
+app.use("/api/stocks", stockRoutes);
+//transaction routes
+app.use("/api/transactions", transactionRoutes);
+//Portfolio routes
+app.use("/api/portfolio", portfolioRoutes);
+// Expense tracking routes
+app.use("/api/expenses", expenseRoutes);
+//Cool off routes 
+app.use("/api/cool-off", coolOffRoutes);
+
 
 // Start server after database connection
 connectDB().then(() => {
