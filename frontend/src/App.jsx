@@ -229,6 +229,63 @@ function Dashboard({ onLogout }) {
   const pendingCoolOffs = coolOffs.filter((purchase) => purchase.status === 'Pending')
   const completedCoolOffs = coolOffs.filter((purchase) => purchase.status !== 'Pending')
 
+  // Dashboard metrics are calculated from saved user records.
+  const MONTHLY_BUDGET = 15000
+  const now = new Date()
+  const isCurrentMonth = (value) => {
+    if (!value) return false
+    const date = new Date(value)
+    return !Number.isNaN(date.getTime()) &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear()
+  }
+
+  const monthlyExpenses = expenses.filter((expense) => isCurrentMonth(expense.date || expense.createdAt))
+  const monthlySpend = monthlyExpenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0)
+  const categorySpend = Object.entries(monthlyExpenses.reduce((totals, expense) => {
+    const category = expense.category || 'Other'
+    totals[category] = (totals[category] || 0) + Number(expense.amount || 0)
+    return totals
+  }, {})).sort((a, b) => b[1] - a[1])
+  const maxCategorySpend = Math.max(...categorySpend.map(([, amount]) => amount), 1)
+  const budgetRemaining = Math.max(MONTHLY_BUDGET - monthlySpend, 0)
+  const budgetUsedPercent = MONTHLY_BUDGET > 0
+    ? Math.min((monthlySpend / MONTHLY_BUDGET) * 100, 100)
+    : 0
+  const purchasesAvoided = coolOffs.filter((purchase) => purchase.status === 'Avoided')
+  const avoidedThisWeek = purchasesAvoided.filter((purchase) => {
+    const date = new Date(purchase.decidedAt || purchase.updatedAt || purchase.createdAt)
+    const daysAgo = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+    return !Number.isNaN(date.getTime()) && daysAgo >= 0 && daysAgo <= 7
+  }).length
+
+  const recentActivity = [
+    ...expenses.map((expense) => ({
+      id: `expense-${expense._id}`,
+      name: expense.description?.trim() || 'Expense',
+      category: `${expense.category || 'Other'} · ${expense.type || 'Planned'}`,
+      amount: Number(expense.amount || 0),
+      type: 'expense',
+      date: expense.date || expense.createdAt,
+    })),
+    ...transactionHistory.map((transaction) => ({
+      id: `investment-${transaction._id}`,
+      name: `${transaction.stockId?.name || 'Stock'} ${transaction.type === 'SELL' ? 'sold' : 'purchased'}`,
+      category: `Investments · ${transaction.quantity || 0} ${Number(transaction.quantity) === 1 ? 'share' : 'shares'}`,
+      amount: Number(transaction.totalAmount || 0),
+      type: transaction.type === 'SELL' ? 'income' : 'investment',
+      date: transaction.createdAt,
+    })),
+    ...coolOffs.filter((purchase) => purchase.status === 'Avoided').map((purchase) => ({
+      id: `avoided-${purchase._id}`,
+      name: `Avoided: ${purchase.productName}`,
+      category: 'Cool-Off Guard · Money not spent',
+      amount: Number(purchase.amount || 0),
+      type: 'income',
+      date: purchase.decidedAt || purchase.updatedAt || purchase.createdAt,
+    })),
+  ].sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()).slice(0, 5)
+
   // Fetch the logged-in user's saved portfolio from MongoDB
   const fetchPortfolio = async () => {
     const token = localStorage.getItem('finquest_token')
@@ -302,11 +359,11 @@ function Dashboard({ onLogout }) {
   }, [activePage])
 
   useEffect(() => {
-    if (activePage === 'Spending Tracker') fetchExpenses()
+    if (activePage === 'Spending Tracker' || activePage === 'Dashboard') fetchExpenses()
   }, [activePage])
 
   useEffect(() => {
-    if (activePage === 'Cool-Off Guard') fetchCoolOffs()
+    if (activePage === 'Cool-Off Guard' || activePage === 'Dashboard') fetchCoolOffs()
   }, [activePage])
 
   const executeTrade = async (type) => {
@@ -403,32 +460,6 @@ function Dashboard({ onLogout }) {
     fetchWallet()
   }, [])
 
-  const [transactions] = useState([
-    {
-      name: 'Grocery shopping',
-      category: 'Food & Essentials',
-      amount: 1250,
-      type: 'expense',
-    },
-    {
-      name: 'Monthly SIP',
-      category: 'Investments',
-      amount: 2000,
-      type: 'investment',
-    },
-    {
-      name: 'Coffee & snacks',
-      category: 'Food & Essentials',
-      amount: 350,
-      type: 'expense',
-    },
-    {
-      name: 'Freelance payment',
-      category: 'Income',
-      amount: 5000,
-      type: 'income',
-    },
-  ])
 
   const pageDescriptions = {
     Dashboard: 'Your financial life, all in one place.',
@@ -590,14 +621,14 @@ function Dashboard({ onLogout }) {
                     <span className="stat-icon orange">◷</span>
                   </div>
 
-                  <div className="stat-value">₹8,450</div>
+                  <div className="stat-value">₹{monthlySpend.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</div>
 
                   <div className="stat-foot">
-                    Of ₹15,000 monthly budget
+                    Of ₹{MONTHLY_BUDGET.toLocaleString('en-IN')} monthly budget
                   </div>
 
                   <div className="progress-track">
-                    <div className="progress-fill" />
+                    <div className="progress-fill" style={{ width: `${budgetUsedPercent}%` }} />
                   </div>
                 </div>
 
@@ -607,10 +638,10 @@ function Dashboard({ onLogout }) {
                     <span className="stat-icon green">✦</span>
                   </div>
 
-                  <div className="stat-value">12</div>
+                  <div className="stat-value">{purchasesAvoided.length}</div>
 
                   <div className="stat-foot">
-                    <span className="positive">↑ 3</span> this week
+                    <span className="positive">{avoidedThisWeek}</span> avoided this week
                   </div>
                 </div>
               </section>
@@ -721,7 +752,7 @@ function Dashboard({ onLogout }) {
 
                   <div className="budget-circle">
                     <div className="budget-circle-inner">
-                      <strong>56%</strong>
+                      <strong>{budgetUsedPercent.toFixed(0)}%</strong>
                       <span>used</span>
                     </div>
                   </div>
@@ -729,19 +760,46 @@ function Dashboard({ onLogout }) {
                   <div className="budget-legend">
                     <div>
                       <span className="legend-dot purple-dot" />
-                      Spent <strong>₹8,450</strong>
+                      Spent <strong>₹{monthlySpend.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</strong>
                     </div>
 
                     <div>
                       <span className="legend-dot light-dot" />
-                      Remaining <strong>₹6,550</strong>
+                      Remaining <strong>₹{budgetRemaining.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</strong>
                     </div>
                   </div>
 
                   <div className="budget-tip">
-                    ✦ You're within your monthly budget. Keep it up!
+                    ✦ {monthlySpend <= MONTHLY_BUDGET ? 'You are within your monthly budget. Keep it up!' : 'You have exceeded your monthly budget. Review your spending.'}
                   </div>
                 </div>
+              </section>
+
+              <section className="panel" style={{ marginBottom: '20px' }}>
+                <div className="panel-heading">
+                  <div>
+                    <h2>Spending by Category</h2>
+                    <p>Based on expenses you recorded this month.</p>
+                  </div>
+                  <button className="text-button" onClick={() => setActivePage('Spending Tracker')}>
+                    Manage expenses ↗
+                  </button>
+                </div>
+                {categorySpend.length === 0 ? (
+                  <p className="empty-state">Your category breakdown will appear after you log expenses for this month.</p>
+                ) : (
+                  <div style={{ display: 'grid', gap: '15px', marginTop: '18px' }}>
+                    {categorySpend.map(([category, amount]) => (
+                      <div key={category} style={{ display: 'grid', gridTemplateColumns: 'minmax(100px, 160px) minmax(80px, 1fr) auto', alignItems: 'center', gap: '14px' }}>
+                        <span style={{ color: 'var(--text-primary, #30245e)', fontWeight: 600 }}>{category}</span>
+                        <div style={{ height: '10px', background: '#eeeaf7', borderRadius: '20px', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${(amount / maxCategorySpend) * 100}%`, background: '#8066df', borderRadius: '20px', transition: 'width .25s' }} />
+                        </div>
+                        <strong style={{ whiteSpace: 'nowrap' }}>₹{amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</strong>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </section>
 
               <section className="panel transactions-panel">
@@ -764,11 +822,11 @@ function Dashboard({ onLogout }) {
                 </div>
 
                 <div className="transaction-list">
-                  {transactions.map((transaction, index) => (
-                    <div className="transaction-row" key={index}>
-                      <div
-                        className={`transaction-icon transaction-${transaction.type}`}
-                      >
+                  {recentActivity.length === 0 ? (
+                    <p className="empty-state">No activity recorded yet. Add an expense, make a virtual trade, or complete a Cool-Off decision to see it here.</p>
+                  ) : recentActivity.map((transaction) => (
+                    <div className="transaction-row" key={transaction.id}>
+                      <div className={`transaction-icon transaction-${transaction.type}`}>
                         {transaction.type === 'income'
                           ? '↓'
                           : transaction.type === 'investment'
@@ -778,18 +836,11 @@ function Dashboard({ onLogout }) {
 
                       <div className="transaction-name">
                         <strong>{transaction.name}</strong>
-                        <span>{transaction.category}</span>
+                        <span>{transaction.category}{transaction.date ? ` · ${new Date(transaction.date).toLocaleDateString('en-IN')}` : ''}</span>
                       </div>
 
-                      <div
-                        className={`transaction-amount ${
-                          transaction.type === 'income'
-                            ? 'positive'
-                            : ''
-                        }`}
-                      >
-                        {transaction.type === 'income' ? '+' : '−'}₹
-                        {transaction.amount.toLocaleString('en-IN')}
+                      <div className={`transaction-amount ${transaction.type === 'income' ? 'positive' : ''}`}>
+                        {transaction.type === 'income' ? '+' : '−'}₹{transaction.amount.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
                       </div>
                     </div>
                   ))}
