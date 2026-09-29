@@ -1,4 +1,6 @@
 import SIPCalculator from './pages/Learning/SIPCalculator'
+import LearnAndPlay from './pages/Learning/LearnAndPlay'
+import BillsAndCashFlow from './pages/CashFlow/BillsAndCashFlow'
 import { useState, useEffect } from 'react'
 import './App.css'
 import Auth from './Auth'
@@ -7,8 +9,10 @@ const menuItems = [
   { id: 'Dashboard', icon: '▦' },
   { id: 'Investments', icon: '↗' },
   { id: 'Spending Tracker', icon: '◷' },
+  { id: 'Bills & Cash Flow', icon: '📅' },
   { id: 'Cool-Off Guard', icon: '❄' },
-  { id: 'Learn & Play', icon: '✧' },
+  { id: 'SIP Investment Simulation', icon: '✧' },
+  { id: 'Learn & Play', icon: '🎮' },
 ]
 
 function Dashboard({ onLogout }) {
@@ -460,8 +464,12 @@ function Dashboard({ onLogout }) {
                 </button>
               </section>
             </>
-          ) : activePage === 'Learn & Play' ? (
+          ) : activePage === 'SIP Investment Simulation' ? (
             <SIPCalculator />
+          ) : activePage === 'Learn & Play' ? (
+            <LearnAndPlay />
+          ) : activePage === 'Bills & Cash Flow' ? (
+            <BillsAndCashFlow />
           ) : (
             <section className="coming-soon">
               <div className="coming-icon">

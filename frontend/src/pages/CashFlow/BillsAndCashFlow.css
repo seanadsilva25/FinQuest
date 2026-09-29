@@ -1,0 +1,436 @@
+.cashflow-wrapper {
+  max-width: 1250px;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  color: #24233a;
+}
+
+/* Header & Month Selector */
+.cashflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.cashflow-header h1 {
+  margin: 6px 0 4px;
+  font: 800 26px 'Manrope', sans-serif;
+  letter-spacing: -0.8px;
+  color: #28243e;
+}
+
+.cashflow-header p {
+  margin: 0;
+  color: #8d899e;
+  font-size: 13px;
+}
+
+.month-picker-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #efeff5;
+  border-radius: 12px;
+  padding: 8px 14px;
+  box-shadow: 0 3px 12px #28243e05;
+}
+
+.month-picker-chip strong {
+  font: 700 14px 'Manrope', sans-serif;
+  color: #28243e;
+  min-width: 130px;
+  text-align: center;
+}
+
+.month-nav-btn {
+  border: 0;
+  background: #f5f2ff;
+  color: #8068df;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font: 800 16px 'Manrope', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.month-nav-btn:hover {
+  background: #8068df;
+  color: #ffffff;
+}
+
+/* Summary Cards */
+.summary-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.income-card .stat-value {
+  color: #38a887;
+}
+
+.expense-card .stat-value {
+  color: #e3a04f;
+}
+
+.stat-icon.blue {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+/* Main Grid Layout */
+.cashflow-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(320px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.cashflow-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Calendar Widget */
+.calendar-widget {
+  background: #faf9fd;
+  border: 1px solid #f0eff5;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #8d899e;
+  margin-bottom: 8px;
+}
+
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day {
+  height: 42px;
+  background: #ffffff;
+  border: 1px solid #eeeef4;
+  border-radius: 8px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.calendar-day.empty {
+  background: transparent;
+  border-color: transparent;
+}
+
+.calendar-day.has-bills {
+  border-color: #dcd6f4;
+  background: #f8f6ff;
+}
+
+.day-number {
+  font-size: 11px;
+  font-weight: 700;
+  color: #28243e;
+}
+
+.day-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.dot-red { background: #e74c3c; }
+.dot-orange { background: #e3a04f; }
+.dot-green { background: #38a887; }
+
+/* Bills Table */
+.bills-list-section h3 {
+  font: 700 15px 'Manrope', sans-serif;
+  color: #28243e;
+  margin-bottom: 12px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.bills-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.bills-table th {
+  text-align: left;
+  padding: 10px 12px;
+  color: #8d899e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 1.5px solid #efeff5;
+}
+
+.bills-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f0eff5;
+  color: #28243e;
+}
+
+.sub-text {
+  display: block;
+  font-size: 9px;
+  color: #aaa7b6;
+  font-weight: 400;
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.status-unpaid { background: #fff5e9; color: #e3a04f; }
+.status-overdue { background: #fde8e8; color: #e74c3c; }
+.status-paid { background: #eaf8f3; color: #38a887; }
+
+.action-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.action-btn {
+  border: 0;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.pay-btn { background: #eaf8f3; color: #38a887; }
+.pay-btn:hover { background: #38a887; color: #fff; }
+
+.edit-btn { background: #f0edff; color: #8068df; }
+.edit-btn:hover { background: #8068df; color: #fff; }
+
+.delete-btn { background: #fde8e8; color: #e74c3c; }
+.delete-btn:hover { background: #e74c3c; color: #fff; }
+
+/* Visualizer & Category Breakdown */
+.income-expense-bar-wrapper {
+  margin-top: 14px;
+}
+
+.ratio-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.ratio-progress-track {
+  height: 10px;
+  background: #eaf8f3;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ratio-progress-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.green-fill { background: #e3a04f; }
+
+.ratio-note {
+  font-size: 10px;
+  color: #8d899e;
+  margin-top: 6px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.category-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cat-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.cat-name { color: #64748b; font-weight: 500; }
+.cat-amount { color: #28243e; font-weight: 700; }
+
+.purple-fill { background: #8068df; }
+
+.log-delete-btn {
+  border: 0;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.log-delete-btn:hover {
+  color: #e74c3c;
+}
+
+.empty-state {
+  text-align: center;
+  color: #aaa7b6;
+  font-size: 12px;
+  padding: 24px 12px;
+  background: #faf9fd;
+  border-radius: 8px;
+  border: 1px dashed #efeff5;
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 36, 62, 0.4);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 26px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.modal-card h3 {
+  font: 700 18px 'Manrope', sans-serif;
+  color: #28243e;
+  margin-top: 0;
+  margin-bottom: 18px;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-form label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #37344b;
+}
+
+.modal-form input,
+.modal-form select {
+  padding: 9px 12px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+}
+
+.modal-form input:focus,
+.modal-form select:focus {
+  border-color: #8068df;
+}
+
+.type-toggle-group {
+  display: flex;
+  gap: 10px;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 8px;
+  border: 1.5px solid #eeeef4;
+  border-radius: 8px;
+  background: #f8f8fc;
+  font-weight: 700;
+  font-size: 12px;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.type-btn.active-income {
+  background: #eaf8f3;
+  color: #38a887;
+  border-color: #38a887;
+}
+
+.type-btn.active-expense {
+  background: #fff5e9;
+  color: #e3a04f;
+  border-color: #e3a04f;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .summary-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cashflow-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cashflow-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
